@@ -1,3 +1,3 @@
 module.exports = {
-    numberOfResults: 1
+    numberOfResults: 5
 }
