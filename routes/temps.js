@@ -27,7 +27,7 @@ var getRoomTemps = function (results, temps) {
     if (!results[temps.data.channel.name]) {
         results[temps.data.channel.name] = [];
     }
-    temps.data.feeds.forEach((cipher) => results[temps.data.channel.name].push(decrypt(Buffer.from(cipher.field1, "base64"), Buffer.from(cipher.field2, "base64"), Buffer.from(cipher.field3, "base64"))));
+    temps.data.feeds.forEach((cipher) => results[temps.data.channel.name].push(JSON.parse(decrypt(Buffer.from(cipher.field1, "base64"), Buffer.from(cipher.field2, "base64"), Buffer.from(cipher.field3, "base64")))));
     return results;
 }
 
