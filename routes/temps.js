@@ -31,8 +31,8 @@ var getRoomTemps = function (results, temps) {
     return results;
 }
 
-router.get('/:count?', function (req, res, next) {
-    let count = req.params.count ? req.params.count : config.numberOfResults;
+router.get('/', function (req, res, next) {
+    let count = req.query.count ? req.query.count : config.numberOfResults;
     axios.all(secrets.thingspeak.map((channel) => axios.get("https://api.thingspeak.com/channels/" + channel.channelId + "/feeds.json?api_key=" + channel.readKey + "&results=" + count)))
         .then((resultsArr) => resultsArr.reduce(getRoomTemps, {}))
         .catch((error) => res.status(500).send("!!! ERROR getting: " + error))
@@ -40,10 +40,10 @@ router.get('/:count?', function (req, res, next) {
         .catch((error) => console.log("!!! ERROR sending: " + error));
 });
 
-router.get('/room/:roomId/:count?', function (req, res, next) {
+router.get('/:roomId', function (req, res, next) {
     var roomChannel = secrets.thingspeak.filter((channel) => (channel.roomId === req.params.roomId));
     if (roomChannel.length === 1) {
-        let count = req.params.count ? req.params.count : config.numberOfResults;
+        let count = req.query.count ? req.query.count : config.numberOfResults;
         axios.get("https://api.thingspeak.com/channels/" + roomChannel[0].channelId + "/feeds.json?api_key=" + roomChannel[0].readKey + "&results=" + count)
             .then((response) => getRoomTemps({}, response))
             .catch((error) => res.status(500).send("!!! ERROR getting: " + error))
